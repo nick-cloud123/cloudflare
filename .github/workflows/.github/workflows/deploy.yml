@@ -1,0 +1,28 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main  # Chạy workflow khi đẩy code lên nhánh main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Lấy code từ repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # (Tùy chọn) Nếu cần build (ví dụ: dùng Hugo, Jekyll), thêm bước build
+      # - name: Build site
+      #   run: npm install && npm run build
+
+      # Triển khai lên Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: cloudflare  # Thay bằng tên project trên Cloudflare Pages
+          directory: .  # Thư mục chứa website (thường là gốc hoặc public)
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
